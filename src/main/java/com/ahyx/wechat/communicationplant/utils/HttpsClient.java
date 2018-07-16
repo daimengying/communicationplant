@@ -78,7 +78,9 @@ public class HttpsClient {
             inputStream.close();
             inputStream = null;
             httpUrlConn.disconnect();
-            jsonObject = JSONObject.fromObject(buffer.toString());
+            if(buffer!=null){
+                jsonObject = JSONObject.fromObject(buffer.toString());
+            }
         } catch (ConnectException ce) {
             _logger.error("Weixin server connection timed out.");
         } catch (Exception e) {

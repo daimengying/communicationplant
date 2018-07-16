@@ -1,5 +1,6 @@
 package com.ahyx.wechat.communicationplant.utils;
 
+import com.ahyx.wechat.communicationplant.config.WeChatAccountConfig;
 import com.ahyx.wechat.communicationplant.contants.WeChatContant;
 import com.ahyx.wechat.communicationplant.vo.AccessToken;
 import net.sf.json.JSONObject;
@@ -24,6 +25,8 @@ public class TokenUtil {
 
     @Autowired
     private RestUtils restUtils;
+    @Autowired
+    WeChatAccountConfig weChatAccountConfig;
 
     // 第三方用户唯一凭证
     private  static AccessToken accessToken ;
@@ -36,8 +39,8 @@ public class TokenUtil {
     public  void  getAccessToken(){
         Map<String ,String> reqMap =new HashMap();
         reqMap.put("grant_type", WeChatContant.GRANTTYPE);
-        reqMap.put("appid",WeChatContant.APPID);
-        reqMap.put("secret",WeChatContant.APPSECRET);
+        reqMap.put("appid",weChatAccountConfig.getAppId());
+        reqMap.put("secret",weChatAccountConfig.getAppSecret());
         //返回格式{"access_token":"ACCESS_TOKEN","expires_in":7200}
         try {
             if(accessToken==null){

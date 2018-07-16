@@ -1,6 +1,10 @@
 package com.ahyx.wechat.communicationplant.service;
 
+
+import net.sf.json.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @Author: daimengying
@@ -9,4 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface MessageService {
     String processRequest(HttpServletRequest request);
+
+    //发送模板消息
+    String sendTemplate(String accessToken, JSONObject data);
 }

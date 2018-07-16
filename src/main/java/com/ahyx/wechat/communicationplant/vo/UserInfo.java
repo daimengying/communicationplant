@@ -2,6 +2,7 @@ package com.ahyx.wechat.communicationplant.vo;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.sf.json.JSONArray;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class UserInfo {
     @Getter
     @Setter
-    private String openid;//用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
+    private String openid;//用户的标识，对当前公众号唯一
 
     @Getter
     @Setter
@@ -53,7 +54,11 @@ public class UserInfo {
 
     @Getter
     @Setter
-    private String unionId;//只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。
+    private JSONArray privilege;
+
+    @Getter
+    @Setter
+    private String unionid;//只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。
 
     @Getter
     @Setter
@@ -61,11 +66,11 @@ public class UserInfo {
 
     @Getter
     @Setter
-    private Integer groupId;//用户所在的分组ID（兼容旧的用户分组接口）
+    private Integer groupid;//用户所在的分组ID（兼容旧的用户分组接口）
 
     @Getter
     @Setter
-    private List<Integer>tagIdList;
+    private List<Integer>tagidList;
 
     @Getter
     @Setter

@@ -1,0 +1,18 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>充值</title>
+</head>
+<body>
+<div class="clearfix">
+    <input  type="text" name="price"  id="price" value="">
+</div>
+<button  type="button" id="toCharge" onclick="FlowCharge.toCharge();">提交</button>
+
+<div th:include="/head :: commonjs" th:remove="tag"></div>
+
+<script th:src="@{/js/flow/flowcharge.js}"+tt=Math.random() type="text/javascript"></script>
+</body>
+
+</html>

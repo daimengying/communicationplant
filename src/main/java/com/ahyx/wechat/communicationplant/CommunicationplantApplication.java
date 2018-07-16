@@ -8,12 +8,14 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 @SpringBootApplication
 @EnableScheduling
+@EnableAsync
 @ComponentScan(basePackages = "com.ahyx.wechat.communicationplant")
 public class CommunicationplantApplication extends SpringBootServletInitializer {
 

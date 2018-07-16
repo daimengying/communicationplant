@@ -1,5 +1,6 @@
 package com.ahyx.wechat.communicationplant.service.impl;
 
+import cn.hutool.json.JSONUtil;
 import com.ahyx.wechat.communicationplant.contants.WeChatContant;
 import com.ahyx.wechat.communicationplant.service.MessageService;
 import com.ahyx.wechat.communicationplant.service.UserInfoService;
@@ -7,18 +8,24 @@ import com.ahyx.wechat.communicationplant.service.factory.CreateMessage;
 import com.ahyx.wechat.communicationplant.service.factory.MessageFactory;
 import com.ahyx.wechat.communicationplant.service.factory.impl.ArticleMsgFactory;
 import com.ahyx.wechat.communicationplant.service.factory.impl.EventMsgFactory;
+import com.ahyx.wechat.communicationplant.utils.RestUtils;
 import com.ahyx.wechat.communicationplant.utils.TokenUtil;
 import com.ahyx.wechat.communicationplant.utils.WechatUtil;
 import com.ahyx.wechat.communicationplant.vo.AccessToken;
 import com.ahyx.wechat.communicationplant.vo.UserInfo;
+import com.alibaba.fastjson.JSON;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import sun.misc.resources.Messages_pt_BR;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @Author: daimengying
@@ -30,8 +37,16 @@ public class MessageServiceImpl implements MessageService {
     private Logger _logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
+    RestUtils restUtil;
+
+    @Resource
     private UserInfoService userInfoService;
 
+    /**
+     * 接收消息
+     * @param request
+     * @return
+     */
     public String processRequest(HttpServletRequest request){
         String respXml="";
         try {
@@ -74,4 +89,22 @@ public class MessageServiceImpl implements MessageService {
         return respXml;
     }
 
+    /**
+     * 发送模板消息
+     * @param accessToken
+     * @param data
+     * @return
+     */
+    @Async
+    @Override
+    public String sendTemplate(String accessToken, JSONObject data) {
+        String url = WeChatContant.SEND_TEMPLATE_MESSAGE.replace("ACCESS_TOKEN", accessToken);
+        String result="";
+        try {
+            result=restUtil.restCallExchange(url,data);
+        }catch (Exception e){
+            _logger.error("模板消息发送异常，错误信息：" + e.getMessage());
+        }
+        return result;
+    }
 }

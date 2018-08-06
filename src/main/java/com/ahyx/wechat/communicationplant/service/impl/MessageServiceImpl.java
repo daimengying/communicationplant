@@ -15,6 +15,7 @@ import com.ahyx.wechat.communicationplant.vo.AccessToken;
 import com.ahyx.wechat.communicationplant.vo.UserInfo;
 import com.alibaba.fastjson.JSON;
 import net.sf.json.JSONObject;
+import org.dom4j.io.STAXEventReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -23,6 +24,8 @@ import sun.misc.resources.Messages_pt_BR;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -95,7 +98,7 @@ public class MessageServiceImpl implements MessageService {
      * @param data
      * @return
      */
-    @Async
+//    @Async
     @Override
     public String sendTemplate(String accessToken, JSONObject data) {
         String url = WeChatContant.SEND_TEMPLATE_MESSAGE.replace("ACCESS_TOKEN", accessToken);
@@ -107,4 +110,6 @@ public class MessageServiceImpl implements MessageService {
         }
         return result;
     }
+
+
 }

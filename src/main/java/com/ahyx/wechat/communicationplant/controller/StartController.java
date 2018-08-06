@@ -27,11 +27,12 @@ import java.util.Map;
  * @Description:
  */
 @Controller
+@RequestMapping("/wechat")
 public class StartController {
     @Autowired
     UserInfoService userInfoService;
 
-    @RequestMapping(value="/wechat", method = RequestMethod.GET)
+    @RequestMapping(value="/", method = RequestMethod.GET)
     @ResponseBody
     public String checkSignature(HttpServletRequest request){
         // 微信加密签名

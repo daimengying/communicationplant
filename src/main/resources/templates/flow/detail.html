@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>充值结果</title>
+    <title>支付详情</title>
+    <div th:include="/common :: commonjs" th:remove="tag"></div>
+
+    <script th:src="@{/common/wechatCommon.js}"+tt=Math.random() type="text/javascript"></script>
+    <script th:src="@{/js/flow/flowcharge.js}"+tt=Math.random() type="text/javascript"></script>
 </head>
 <body>
-充值结果
+    <input  type="hidden" name="orderResult"  id="orderResult" th:value="${orderResult}">
+    <input  type="hidden" name="userInfo"  id="userInfo" th:value="${userInfo}">
+
+    <div th:if=" ${orderResult.success} ">
+        <span  th:text="${orderResult.price}  "></span> 元
+    </div>
+    <div th:th:unless=" ${orderResult.success} ">
+        订购信息获取失败
+    </div>
+    <button  type="button" id="toCharge" onclick="FlowCharge.toCharge();">提交</button>
+
+
 </body>
 </html>

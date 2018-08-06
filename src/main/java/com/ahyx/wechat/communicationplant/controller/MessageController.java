@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.net.URLEncoder;
 import java.util.TreeMap;
 
 /**
@@ -57,9 +58,9 @@ public class MessageController {
             if(StringUtils.isEmpty(openId)||"null".equals(openId)){
 //                System.out.println("-------调用微信网页授权获取用户信息接口--------");
                 String getCodeUrl=WeChatContant.GET_CODE_URL.replace("APPID",weChatAccountConfig.getAppId())
-                        .replace("REDIRECT_URI",req.getScheme()+"://"+ req.getServerName()+"/getOpenId")
+                        .replace("REDIRECT_URI",req.getScheme()+"://"+ req.getServerName()+"/wechat/getOpenId")
                         .replace("SCOPE","snsapi_userinfo").replace("STATE","");
-                session.setAttribute("redirect",req.getScheme()+"://"+ req.getServerName()+"/sendTemplate");
+                session.setAttribute("redirect", URLEncoder.encode(req.getScheme()+"://"+ req.getServerName()+"/sendTemplate","utf-8"));
                 resp.sendRedirect(getCodeUrl);
             }else{
                 String getWebUserInfoUrl=WeChatContant.GET_WEB_USERINFO_URL.replace("ACCESS_TOKEN", webAccessToken).replace("OPENID",openId);

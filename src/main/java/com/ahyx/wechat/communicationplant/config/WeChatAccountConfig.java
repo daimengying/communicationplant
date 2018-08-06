@@ -39,4 +39,9 @@ public class WeChatAccountConfig {
      * 异步通知路径
      */
     private String notifyUrl;
+
+    /**
+     * 支付完成后接收流量平台提供的返回结果
+     */
+    private String callbackUrl;
 }

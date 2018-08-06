@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
@@ -83,4 +84,24 @@ public class RestUtils {
         return result;
     }
 
+    /**
+     * 表单提交
+     * POST方式
+     * @param url
+     * @param reqMap
+     * @return
+     */
+    public String formPostExchange(String url ,MultiValueMap reqMap){
+        String reqJson = JSON.toJSONString(reqMap);
+        _logger.info("【请求】调用远程服务【" +  url + "】请求报文：" + reqJson);
+        HttpHeaders heads = new HttpHeaders();
+        heads.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String,Object>> entity = new HttpEntity<>(reqMap , heads);
+        ResponseEntity<String> responseEntity = this.restTemplate.exchange( url , HttpMethod.POST , entity, String.class);
+        String result = responseEntity.getBody();
+        _logger.info("【响应】调用远程服务【" + url + "】返回报文：" + result);
+        return result;
+    }
 }
+
+

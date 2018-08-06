@@ -4,21 +4,31 @@ $(function(){
 
 var FlowCharge= {
     toCharge : function () {
+        var orderResultStr=$("#orderResult").val();
+        var orderResult=JSON.parse(orderResultStr);
+        var jsonData={
+            "name":orderResult.name,
+            "price":orderResult.price,
+            "userInfo":$("#userInfo").val()
+        };
+
         $.ajax({
+            url: commonJs.root() + '/charge/invokeCharge?tt='+new Date().getTime(),
             type: "POST",
-            url: commonJs.root() + '/charge/create?tt='+new Date().getTime(),
             cache: false,
-            data:{price:$("#price").val()},
+            data:JSON.stringify(jsonData),
+            contentType : 'application/json;charset=utf-8',
             dataType:'json',
             async:false,
             success: function(data){
-                if(data.success) {
-                    //发起微信支付
-                    onBridgeReady(data.payResponse, commonJs.root() + '/charge/flowOrderDetail?id='+data.orderId);
-                }else {
-                    layer.alert('服务器异常', {icon: 5});
+                if(data){
+                    if(data.success) {
+                        //发起微信支付
+                        pay(data.payResponse, commonJs.root() + '/charge/wxNotify');
+                    }else {
+                        layer.alert('服务器异常', {icon: 5});
+                    }
                 }
-
             }
         });
     }

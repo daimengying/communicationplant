@@ -33,7 +33,7 @@ public class WeChatPayConfig {
         wxPayH5Config.setAppSecret(weChatAccountConfig.getAppSecret());// 设置微信公众号的app corpSecret
         wxPayH5Config.setMchId(weChatAccountConfig.getMchId());// 设置商户号
         wxPayH5Config.setMchKey(weChatAccountConfig.getMchKey());// 设置商户密钥
-        wxPayH5Config.setKeyPath(weChatAccountConfig.getKeyPath());// 设置商户证书路径
+//        wxPayH5Config.setKeyPath(weChatAccountConfig.getKeyPath());// 设置商户证书路径
         wxPayH5Config.setNotifyUrl(weChatAccountConfig.getNotifyUrl());// 设置支付后异步通知url
         return wxPayH5Config;
     }

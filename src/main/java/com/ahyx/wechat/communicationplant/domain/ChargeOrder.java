@@ -1,5 +1,6 @@
 package com.ahyx.wechat.communicationplant.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -39,7 +40,10 @@ public class ChargeOrder implements Serializable {
 	private Integer amount;//面值
 	
 	private Double price;//售价
-	
+
+	private Double payMoney;//支付金额
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date optionTime;//提交时间
 	
 	private Integer submitType;//提交类型（固定6 微信充值）
@@ -47,7 +51,8 @@ public class ChargeOrder implements Serializable {
 	private String chargeTaskId;// 订单号
 	
 	private Integer chargeStatus;//充值状态  1 未知  2 提交成功  3 提交失败  4 充值成功  5 充值失败
-	
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date reportTime;//报告时间
 	
 	private String reportContent;//报告内容

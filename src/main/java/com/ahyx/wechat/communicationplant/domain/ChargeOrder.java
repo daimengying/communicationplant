@@ -49,6 +49,8 @@ public class ChargeOrder implements Serializable {
 	private Integer submitType;//提交类型（固定6 微信充值）
 	
 	private String chargeTaskId;// 订单号
+
+	private String transactionId;//微信生成的订单号
 	
 	private Integer chargeStatus;//充值状态  1 未知  2 提交成功  3 提交失败  4 充值成功  5 充值失败
 
@@ -64,6 +66,8 @@ public class ChargeOrder implements Serializable {
 	private Integer paystatus ;//支付状态 0 已支付 1未支付
 
 	private String upOrderId;//上游返回的订单号
+
+	private String outRefundNo;//退款单号
 	
 	private Integer refundFlag;//退款标记  0 未退款 1 已退款
 	

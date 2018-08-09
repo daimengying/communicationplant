@@ -16,7 +16,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.lly835.bestpay.model.PayResponse;
 import com.lly835.bestpay.model.RefundResponse;
-import com.lly835.bestpay.rest.type.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.sound.midi.Soundbank;
-import javax.ws.rs.POST;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -158,7 +155,6 @@ public class ChargeController {
     public String wxNotify(Model model, @RequestBody String notifyData){
         Map<String,Object> notify=chargeService.notify(notifyData);
         boolean success=Boolean.valueOf(notify.get("success").toString());
-        String msg=notify.get("msg").toString();
         ChargeOrder chargeOrder=(ChargeOrder) notify.get("chargeOrder");
 
         //异步下发提单结果模板消息
@@ -169,11 +165,11 @@ public class ChargeController {
         if(accessToken!=null){
             if(success){
                 //提单成功
-                dataParams.put("first", TemplateMessage.item("下单成功通知", "#000000"));
+                dataParams.put("first", TemplateMessage.item("您的订单已被处理，正在充值中。", "#000000"));
                 dataParams.put("keyword1",TemplateMessage.item(chargeOrder.getMobile(), "#000000"));
                 dataParams.put("keyword2",TemplateMessage.item("微信支付", "#000000"));
                 dataParams.put("keyword4",TemplateMessage.item(chargeOrder.getPayMoney()+"元", "#000000"));
-                dataParams.put("remark",TemplateMessage.item("订单提交成功，请耐心等待！", "#000000"));
+                dataParams.put("remark",TemplateMessage.item("充值存在延迟，请耐心等待！", "#000000"));
 
                 templateMsg.setTemplate_id(WeChatContant.COMMITORDER_SUCCESS_TEMPLATE_ID);//订单受理通知
                 templateMsg.setTouser(chargeOrder.getBuyerOpenid());
@@ -181,7 +177,7 @@ public class ChargeController {
                 messageService.sendTemplate(accessToken.getToken(), net.sf.json.JSONObject.fromObject(templateMsg));
             }else{
                 //提单失败
-                dataParams.put("first", TemplateMessage.item("下单失败通知", "#000000"));
+                dataParams.put("first", TemplateMessage.item("您的订单提交失败", "#000000"));
 //                dataParams.put("keyword1",TemplateMessage.item(chargeOrder.getMobile(), "#000000"));
                 /**
                  * -----------------------------------------手机号码先写死了-----------------------
@@ -189,32 +185,13 @@ public class ChargeController {
                 dataParams.put("keyword1",TemplateMessage.item("15605655465", "#000000"));
                 dataParams.put("keyword2",TemplateMessage.item("微信支付", "#000000"));
                 dataParams.put("keyword4",TemplateMessage.item(chargeOrder.getPayMoney()+"元", "#000000"));
-                dataParams.put("remark",TemplateMessage.item("订单提交失败，失败原因："+msg+"。我们稍后会为您返款，请耐心等待！", "#000000"));
+                dataParams.put("remark",TemplateMessage.item("订单提交失败，失败原因："+notify.get("msg").toString()+"。我们稍后会为您返款，请耐心等待！", "#000000"));
 
                 templateMsg.setTemplate_id(WeChatContant.COMMITORDER_SUCCESS_TEMPLATE_ID);//订单受理通知
                 templateMsg.setTouser(chargeOrder.getBuyerOpenid());
                 templateMsg.setData(dataParams);
                 messageService.sendTemplate(accessToken.getToken(), net.sf.json.JSONObject.fromObject(templateMsg));
-                //微信退款，支付成功状态下发起退款消息
-                if(chargeOrder.getPaystatus()==0){
-                    RefundResponse refundResponse=chargeService.refund(chargeOrder);
-                    if(refundResponse!=null){
-                        //异步下发退款通知模板
-                        dataParams = new TreeMap<>();
-                        dataParams.put("first", TemplateMessage.item("提交失败订单退款", "#000000"));
-                        dataParams.put("keyword1",TemplateMessage.item(refundResponse.getOrderId(), "#000000"));
-                        dataParams.put("keyword2",TemplateMessage.item(chargeOrder.getName(), "#000000"));
-                        dataParams.put("keyword3",TemplateMessage.item(refundResponse.getOrderAmount()+"元", "#000000"));
-                        String refundTime=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                        dataParams.put("keyword4",TemplateMessage.item(refundTime, "#000000"));
-                        dataParams.put("remark",TemplateMessage.item("您提交失败的订单我们已为您办理退款，感谢您的使用！", "#000000"));
-                        templateMsg = new TemplateMessage();
-                        templateMsg.setTemplate_id(WeChatContant.REFUND_TEMPLATE_ID);
-                        templateMsg.setTouser(chargeOrder.getBuyerOpenid());
-                        templateMsg.setData(dataParams);
-                        messageService.sendTemplate(accessToken.getToken(), net.sf.json.JSONObject.fromObject(templateMsg));
-                    }
-                }
+
             }
 
         }
@@ -259,7 +236,7 @@ public class ChargeController {
                     //充值失败，发起模板消息
                     dataParams.put("first", TemplateMessage.item("订单充值失败通知", "#000000"));
                     dataParams.put("keyword1",TemplateMessage.item(chargeOrder.getMobile(), "#000000"));
-                    dataParams.put("keyword2",TemplateMessage.item(chargeOrder.getPrice()+"元", "#000000"));
+                    dataParams.put("keyword2",TemplateMessage.item(chargeOrder.getPayMoney()+"元", "#000000"));
                     dataParams.put("remark",TemplateMessage.item("退款需要1-3个工作日完成，请耐心等待，谢谢！", "#000000"));
 
                     templateMsg.setTemplate_id(WeChatContant.CHARGE_FAIL_TEMPLATE_ID);
@@ -267,26 +244,6 @@ public class ChargeController {
                     templateMsg.setData(dataParams);
                     messageService.sendTemplate(accessToken.getToken(), net.sf.json.JSONObject.fromObject(templateMsg));
 
-                    //微信退款，支付成功状态下发起退款消息
-                    if(chargeOrder.getPaystatus()==0){
-                        RefundResponse refundResponse=chargeService.refund(chargeOrder);
-                        if(accessToken!=null&&refundResponse!=null){
-                            //异步下发退款通知模板
-                            dataParams = new TreeMap<>();
-                            dataParams.put("first", TemplateMessage.item("充值失败订单退款通知", "#000000"));
-                            dataParams.put("keyword1",TemplateMessage.item(refundResponse.getOrderId(), "#000000"));
-                            dataParams.put("keyword2",TemplateMessage.item(chargeOrder.getName(), "#000000"));
-                            dataParams.put("keyword3",TemplateMessage.item(refundResponse.getOrderAmount()+"元", "#000000"));
-                            String refundTime=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                            dataParams.put("keyword4",TemplateMessage.item(refundTime, "#000000"));
-                            dataParams.put("remark",TemplateMessage.item("您的充值失败订单我们已为您办理退款，感谢您的使用！", "#000000"));
-                            templateMsg = new TemplateMessage();
-                            templateMsg.setTemplate_id(WeChatContant.REFUND_TEMPLATE_ID);
-                            templateMsg.setTouser(chargeOrder.getBuyerOpenid());
-                            templateMsg.setData(dataParams);
-                            messageService.sendTemplate(accessToken.getToken(), net.sf.json.JSONObject.fromObject(templateMsg));
-                        }
-                    }
                 }else if("4".equals(status)){
                     //充值成功
                     dataParams.put("first", TemplateMessage.item("充值成功通知", "#000000"));

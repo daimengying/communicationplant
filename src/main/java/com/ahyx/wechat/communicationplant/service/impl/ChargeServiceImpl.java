@@ -26,6 +26,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -74,11 +75,10 @@ public class ChargeServiceImpl implements ChargeService{
      * @return
      */
     @Override
-    @Async
     public RefundResponse refund(ChargeOrder chargeOrder) {
         RefundRequest refundRequest = new RefundRequest();
         refundRequest.setOrderId(chargeOrder.getChargeTaskId());
-        refundRequest.setOrderAmount(chargeOrder.getPrice());
+        refundRequest.setOrderAmount(chargeOrder.getPayMoney());
         refundRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_H5);
         _logger.info("【微信退款】request={}", JsonUtil.toJson(refundRequest));
         RefundResponse refundResponse = bestPayService.refund(refundRequest);
@@ -96,6 +96,16 @@ public class ChargeServiceImpl implements ChargeService{
     public Integer insertOrder(ChargeOrder chargeOrder) {
         Integer result=chargeOrderMapper.insertSelective(chargeOrder);
         return result;
+    }
+
+    /**
+     * 条件查询订单列表
+     * @param example
+     * @return
+     */
+    @Override
+    public List<ChargeOrder> listByExample(Example example) {
+        return chargeOrderMapper.selectByExample(example);
     }
 
     /**
@@ -146,6 +156,7 @@ public class ChargeServiceImpl implements ChargeService{
             //2.0 修改订单支付状态
             chargeOrder.setPaystatus(0);//0已支付 1未支付
             chargeOrder.setPayMoney(payResponse.getOrderAmount());
+            chargeOrder.setTransactionId(payResponse.getOutTradeNo());
 
             //3.0  判断金额是否一致。相减小于0.01即认为相等
             double substract=payResponse.getOrderAmount()-chargeOrder.getPrice();
@@ -191,7 +202,7 @@ public class ChargeServiceImpl implements ChargeService{
             params.add("sign",md5sign);
             params.add("callbackUrl",weChatAccountConfig.getCallbackUrl());
             params.add("orderId",chargeOrder.getChargeTaskId());
-            String restCallResult=restUtil.restCall("http://139.129.220.55/v1/charge.action",params);
+            String restCallResult=restUtil.formPostExchange("http://139.129.220.55/v1/charge.action",params);
 
             //修改订单状态，更新订单记录
             JSONObject resultObj=JSONObject.parseObject(restCallResult);
@@ -199,11 +210,13 @@ public class ChargeServiceImpl implements ChargeService{
             if(resultObj.getBoolean("success")){
                 chargeOrder.setChargeStatus(2);//提交成功
                 chargeOrder.setUpOrderId(resultObj.getString("taskId"));
+                result.put("success",true);
             }else{
                 chargeOrder.setChargeStatus(3);//提交失败
+                result.put("msg",resultObj.getString("msg"));
+                result.put("success",false);
             }
             result.put("chargeOrder",chargeOrder);
-            result.put("success",true);
         }catch (Exception e){
             result.put("success",false);
             result.put("msg","提单到上游失败");

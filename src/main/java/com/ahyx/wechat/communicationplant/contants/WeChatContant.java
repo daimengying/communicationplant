@@ -1,6 +1,5 @@
 package com.ahyx.wechat.communicationplant.contants;
 
-import java.text.SimpleDateFormat;
 
 /**
  * @Author: daimengying
@@ -45,7 +44,7 @@ public class WeChatContant {
     public static final String CHARGE_FAIL_TEMPLATE_ID="B_4T7UCuu5n-T-T1hlZ1GxhS1WgDH-RF86plwbsOHio"; //充值失败模板
     public static final String CHARGE_SUCCESS_TEMPLATE_ID="4xPPUa3HZtGTTrMZpQml5vQ-LO9KmePLwBU0UKCPvQM";//充值成功模板
     public static final String REFUND_TEMPLATE_ID="O0950-g--S0k_bsDWyrCDHu6WZBf5M_LASUuCLZM1uc";//退款通知
-    public static final String COMMITORDER_SUCCESS_TEMPLATE_ID="-mwhbwco4ZdosxKuWTGltlB-_NinGMhVBjPpDOcfxG-M";//提单成功
+    public static final String COMMITORDER_SUCCESS_TEMPLATE_ID="mwhbwco4ZdosxKuWTGltlB-_NinGMhVBjPpDOcfxG-M";//提单成功
 
     /******************************************菜单相关***************************************/
     public static String MENU_CREATE_URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
@@ -58,4 +57,7 @@ public class WeChatContant {
     /******************************************关注/取消关注***************************************/
     public final static String EVENT_SUBSCRIBE = "subscribe";
     public final static String EVENT_UNSUBSCRIBE = "unsubscribe";
+
+    /******************************************微信退款***************************************/
+    public final static String REFUND_URL="https://api.mch.weixin.qq.com/secapi/pay/refund";
 }

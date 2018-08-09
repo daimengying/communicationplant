@@ -98,7 +98,7 @@ public class MessageServiceImpl implements MessageService {
      * @param data
      * @return
      */
-//    @Async
+    @Async
     @Override
     public String sendTemplate(String accessToken, JSONObject data) {
         String url = WeChatContant.SEND_TEMPLATE_MESSAGE.replace("ACCESS_TOKEN", accessToken);

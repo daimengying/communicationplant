@@ -2,9 +2,36 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>充值结果</title>
+    <div th:include="/common :: head" th:remove="tag"></div>
+    <link rel="icon" href="" type="image/x-icon"/>
+    <link th:href="@{/css/flow/index.css}" rel="stylesheet">
+    <div th:include="/common :: commonjs" th:remove="tag"></div>
 </head>
 <body>
-充值成功
+    <div class="success" th:if="${chargeOrder.paystatus==0}">
+        <img th:src="@{/common/imgs/success.png}" alt="success">
+        <h3>充值完成</h3>
+        <p>您已充值(元)</p>
+        <h2 th:text="${chargeOrder.payMoney}"></h2>
+        <p>
+            获得
+            <span th:text="${chargeOrder.name}"></span>
+        </p>
+        <button onclick="back()">完成</button>
+    </div>
+    <div class="success" th:unless="${chargeOrder.paystatus==0}">
+        <img th:src="@{/common/imgs/fail.png}" alt="success">
+        <h3>充值失败</h3>
+        <button onclick="back()">完成</button>
+    </div>
 </body>
+<script>
+    function back() {
+        window.location.href=commonJs.root()+'/charge/flow';
+    }
+</script>
 </html>

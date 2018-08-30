@@ -2,20 +2,116 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>充值</title>
+    <div th:include="/common :: head" th:remove="tag"></div>
+    <link th:href="@{/common/css/swiper.min.css}" rel="stylesheet">
+    <link th:href="@{/css/flow/index.css}" rel="stylesheet">
+
 </head>
+
 <body>
+    <!--header-->
+    <header>
+        <ul class="tab">
+            <li class="tabActive">
+                <a href="javascript:void(0)">流量充值</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)">话费充值</a>
+            </li>
+        </ul>
+    </header>
 
-<form th:action="@{/charge/create}" id="chargeSub" th:method="get">
-<div class="clearfix">
-    <input  type="text" name="price"  id="price" value="">
-    <input  type="text" name="name"  id="name" value="test">
-</div>
-<button  type="submit"  >提交</button>
-</form>
+    <form th:action="@{/charge/create}"  th:method="get" id="formSubmit">
+        <input  type="hidden" name="commodityId"  id="commodityId" value="">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide swiper-no-swiping">
+                    <div class="userMsg">
+                        <div>
+                            <div>
+                                <input type="text"  placeholder="请输入手机号" value="" name="phoneNum" id="phoneNum">
+                            </div>
+                            <img th:src="@{/common/imgs/img1.png}" alt="msg">
+                        </div>
+                    </div>
 
-<div th:include="/common :: commonjs" th:remove="tag"></div>
+                    <!--充值套餐-->
+                    <div class="con">
+                        <div class="conTop">
+                            全国流量
+                        </div>
+                        <ul class="content" id="flow" >
+                            <div th:each="commodity:${commodities}" >
+                                <li th:attr="commodityId=${commodity.id}">
+                                    <p th:text="${commodity.name}"></p>
+                                    <p >售价<span th:text="${commodity.money}"></span>元</p>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+
+                <!--话费充值部分-->
+                <div class="swiper-slide swiper-no-swiping">
+                    <div class="userMsg">
+                        <div>
+                            <div>
+                                <input type="text" placeholder="请输入手机号" value="" name="phoneNum">
+                            </div>
+                            <img th:src="@{/common/imgs/img1.png}" alt="msg">
+                        </div>
+                    </div>
+
+                    <!--充值套餐-->
+                    <div class="con">
+                        <div class="conTop">
+                            充值金额
+                        </div>
+                        <ul class="content" id="phonefare">
+                            <div>
+                                <li>
+                                    <p>10元</p>
+                                    <p>售价10元</p>
+                                </li>
+                            </div>
+                            <div>
+                                <li>
+                                    <p>100元</p>
+                                    <p>售价100元</p>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="button" class="pay-btn" value ="立即充值"  />
+    </form>
+
+    <!--提示-->
+    <div class="msg">
+        <h4 id="msg" data-num="0">
+            <img th:src="@{/common/imgs/notice.png}" alt="notice">
+                移动流量充值提示
+            <img th:src="@{/common/imgs/right.png}" alt="right">
+        </h4>
+        <ul>
+            <li>生效时间：充值成功即时生效</li>
+            <li>使用范围：支持全国漫游</li>
+            <li>使用有效期：充值当月有效</li>
+            <li>充值次数限制：不限制次数</li>
+            <li>停机、欠费 不能充值</li>
+        </ul>
+    </div>
+
+
+    <div th:include="/common :: commonjs" th:remove="tag"></div>
+    <script th:src="@{/js/flow/index.js}"+tt=Math.random() type="text/javascript"></script>
 
 </body>
-
 </html>

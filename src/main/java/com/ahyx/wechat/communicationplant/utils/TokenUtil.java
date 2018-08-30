@@ -58,7 +58,7 @@ public class TokenUtil {
             }
 
         }catch (Exception e){
-            _logger.error("获取access_token失败");
+            _logger.error("获取access_token失败："+e.getMessage());
         }
 
     }

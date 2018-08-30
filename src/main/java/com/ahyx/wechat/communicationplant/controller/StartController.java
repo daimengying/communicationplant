@@ -1,15 +1,7 @@
 package com.ahyx.wechat.communicationplant.controller;
 
-import com.ahyx.wechat.communicationplant.config.WeChatAccountConfig;
-import com.ahyx.wechat.communicationplant.contants.WeChatContant;
 import com.ahyx.wechat.communicationplant.service.UserInfoService;
-import com.ahyx.wechat.communicationplant.utils.TokenUtil;
 import com.ahyx.wechat.communicationplant.utils.WechatUtil;
-import com.ahyx.wechat.communicationplant.vo.AccessToken;
-import com.ahyx.wechat.communicationplant.vo.UserInfo;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;

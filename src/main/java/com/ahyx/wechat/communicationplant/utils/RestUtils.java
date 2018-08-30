@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,19 +33,25 @@ public class RestUtils {
      * @return
      */
     public  String restGetForEntity(String url, Map reqMap){
-        String reqJson = JSON.toJSONString(reqMap);
-        _logger.info("【请求】调用远程服务【" +  url + "】请求报文：" + reqJson);
-        StringBuffer paramStr=new StringBuffer();
-        paramStr.append("?");
-        Set keySet = reqMap.keySet();       //获取key集合对象
-        for (Object keyName : keySet) {
-            paramStr.append(keyName).append("={"+keyName+"}&");
+        try {
+            String reqJson = JSON.toJSONString(reqMap);
+            StringBuffer paramStr=new StringBuffer();
+            paramStr.append("?");
+            Set keySet = reqMap.keySet();       //获取key集合对象
+            for (Object keyName : keySet) {
+                paramStr.append(keyName).append("="+ reqMap.get(keyName)+"&");
+            }
+            paramStr=paramStr.deleteCharAt(paramStr.length() - 1);
+            _logger.info("【请求】调用远程服务请求报文：" + url+paramStr.toString());
+            ResponseEntity<String> responseEntity = this.restTemplate.getForEntity( url+paramStr.toString(), String.class);
+            String result = responseEntity.getBody();
+            _logger.info("【响应】调用远程服务【" + url + "】返回报文：" + result);
+            return result;
+        }catch (Exception e){
+            _logger.error(e.getMessage());
+            return null;
         }
-        paramStr=paramStr.deleteCharAt(paramStr.length() - 1);
-        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity( url+paramStr.toString(), String.class,reqMap);
-        String result = responseEntity.getBody();
-        _logger.info("【响应】调用远程服务【" + url + "】返回报文：" + result);
-        return result;
+
     }
 
 

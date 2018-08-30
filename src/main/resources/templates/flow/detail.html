@@ -2,23 +2,56 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>支付详情</title>
-    <div th:include="/common :: commonjs" th:remove="tag"></div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>充值详情</title>
+    <div th:include="/common :: head" th:remove="tag"></div>
+    <link th:href="@{/css/flow/index.css}" rel="stylesheet">
 
+    <div th:include="/common :: commonjs" th:remove="tag"></div>
     <script th:src="@{/common/wechatCommon.js}"+tt=Math.random() type="text/javascript"></script>
     <script th:src="@{/js/flow/flowcharge.js}"+tt=Math.random() type="text/javascript"></script>
 </head>
-<body>
-    <input  type="hidden" name="orderResult"  id="orderResult" th:value="${orderResult}">
+<body class="details">
+    <input  type="hidden" name="orderDetail"  id="orderDetail" th:value="${orderDetail}">
     <input  type="hidden" name="userInfo"  id="userInfo" th:value="${userInfo}">
+    <input  type="hidden" name="commodity"  id="commodity" th:value="${commodity}">
 
-    <div th:if=" ${orderResult.success} ">
-        <span  th:text="${orderResult.price}  "></span> 元
+    <div class="details-top">
+        <img th:src="@{/imgs/flow/ll2.png}" alt="ll">
+        手机充值
     </div>
-    <div th:th:unless=" ${orderResult.success} ">
+
+    <div th:if=" ${orderDetail.success} ">
+        <div class="details-con" >
+
+            <h3>订购详情</h3>
+            <p class="details-phone">
+                <span>充值号码</span>
+                <span th:text="${orderDetail.phoneNum}"></span>
+            </p>
+            <p class="details-ll">
+                <span>订购商品</span>
+                <span th:text="${commodity.name}"></span>
+            </p>
+            <div class="details-price">
+                <span>商品价格</span>
+                <p>
+                    <span th:text="${commodity.money}"> </span>元
+                </p>
+
+            </div>
+
+        </div>
+        <div class="details-footer">
+            <div href="javscript:history.go(-1)">取消</div>
+            <div onclick="FlowCharge.toCharge();">立即充值</div>
+        </div>
+    </div>
+    <div th:unless=" ${orderDetail.success} ">
         订购信息获取失败
     </div>
-    <button  type="button" id="toCharge" onclick="FlowCharge.toCharge();">提交</button>
 
 
 </body>

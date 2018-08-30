@@ -28,7 +28,9 @@ public class ChargeOrder implements Serializable {
 
 	private String buyerOpenid;//下单者的微信openid
 	
-	private Integer type;//运营商类型   1 移动 2联通 3电信
+	private Integer type;//充值类型：1 流量 2 话费
+
+	private Integer operatorType;//运营商类型  0 全网 1 移动 2联通 3电信
 	
 	private Integer rangeType;//流量类型 0 全国 1省内
 	
@@ -70,5 +72,7 @@ public class ChargeOrder implements Serializable {
 	private String outRefundNo;//退款单号
 	
 	private Integer refundFlag;//退款标记  0 未退款 1 已退款
+
+	private Integer wxnotifyFlag;//微信支付回调通知标记，0未通知；1已通知
 	
 }

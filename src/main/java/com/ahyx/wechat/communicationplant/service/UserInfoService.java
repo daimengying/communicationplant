@@ -1,6 +1,6 @@
 package com.ahyx.wechat.communicationplant.service;
 
-import com.ahyx.wechat.communicationplant.vo.UserInfo;
+import com.ahyx.wechat.communicationplant.domain.User;
 
 import java.util.Map;
 
@@ -10,7 +10,12 @@ import java.util.Map;
  * @Description:获取用户信息
  */
 public interface UserInfoService {
-    UserInfo getUserInfoSub(String openID, String access_token);
+    User getUserInfoSub(String openID, String access_token);
 
     Map<String,String> getOpenId(String code, String state);
+
+    Integer addOrUpdateUser(User user);
+
+    User  getUserByOpenid(String openid);
+
 }

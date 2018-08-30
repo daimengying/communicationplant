@@ -153,6 +153,12 @@ public class ChargeServiceImpl implements ChargeService{
                 result.put("msg","【微信支付】异步通知,订单不存在");
                 return result;
             }
+            //微信已经通知过，则不做处理
+            if(chargeOrder.getWxnotifyFlag()!=0){
+                result.put("chargeOrder",chargeOrder);
+                result.put("success",false);
+                return result;
+            }
             //2.0 修改订单支付状态
             chargeOrder.setPaystatus(0);//0已支付 1未支付
             chargeOrder.setPayMoney(payResponse.getOrderAmount());
@@ -187,10 +193,10 @@ public class ChargeServiceImpl implements ChargeService{
             //------------------------------------代理商账号先写死
             MultiValueMap<String, Object> params= new LinkedMultiValueMap<>();
             params.add("account", UserAccountContant.USER_ACCOUNT);
-            params.add("packageType", chargeOrder.getPackageType());
+            params.add("packageType", chargeOrder.getPackageType().toString());
             params.add("mobile", chargeOrder.getMobile());
-            params.add("amount", chargeOrder.getAmount());
-            params.add("range",chargeOrder.getRangeType());
+            params.add("amount", chargeOrder.getAmount().toString());
+            params.add("range",chargeOrder.getRangeType().toString());
             //加密算法
             StringBuffer resign = new StringBuffer();
             resign.append("account=").append(UserAccountContant.USER_ACCOUNT);
@@ -202,8 +208,8 @@ public class ChargeServiceImpl implements ChargeService{
             params.add("sign",md5sign);
             params.add("callbackUrl",weChatAccountConfig.getCallbackUrl());
             params.add("orderId",chargeOrder.getChargeTaskId());
-            String restCallResult=restUtil.formPostExchange("http://139.129.220.55/v1/charge.action",params);
-
+//            String restCallResult=restUtil.formPostExchange("http://139.129.220.55/v1/charge.action",params);
+            String restCallResult=restUtil.formPostExchange("http://127.0.0.1:8081/v1/charge.action",params);
             //修改订单状态，更新订单记录
             JSONObject resultObj=JSONObject.parseObject(restCallResult);
             chargeOrder.setMemo(resultObj.getString("msg"));
@@ -220,7 +226,7 @@ public class ChargeServiceImpl implements ChargeService{
         }catch (Exception e){
             result.put("success",false);
             result.put("msg","提单到上游失败");
-            _logger.error("提单到上游失败："+e.getMessage());
+            _logger.error("提单到上游失败：", e);
         }
         this.updateOrderByPk(chargeOrder);
         return result;

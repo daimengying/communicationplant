@@ -2,16 +2,20 @@ package com.ahyx.wechat.communicationplant.service.impl;
 
 import com.ahyx.wechat.communicationplant.config.WeChatAccountConfig;
 import com.ahyx.wechat.communicationplant.contants.WeChatContant;
+import com.ahyx.wechat.communicationplant.dao.UserMapper;
+import com.ahyx.wechat.communicationplant.domain.User;
 import com.ahyx.wechat.communicationplant.service.UserInfoService;
 import com.ahyx.wechat.communicationplant.utils.HttpsClient;
-import com.ahyx.wechat.communicationplant.vo.UserInfo;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +30,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Autowired
     WeChatAccountConfig weChatAccountConfig;
+    @Resource
+    UserMapper userMapper;
+
+
     /**
      * 使用  openID、access_token直接获取用户的信息
      * openID就是用户FromUserName
@@ -34,11 +42,12 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return
      */
     @Override
-    public UserInfo getUserInfoSub(String openID, String access_token) {
+    public User getUserInfoSub(String openID, String access_token) {
         String requestUrl= WeChatContant.GET_USERINFO_URL.replace("ACCESS_TOKEN", access_token).replace("OPENID", openID);
-        UserInfo user=new UserInfo();
+        User user=new User();
         try {
             JSONObject userInfoObj= HttpsClient.httpRequest(requestUrl, "GET", null);
+            user.setSubscribe(userInfoObj.getInt("subscribe")==1?true:false);
             user.setOpenid(userInfoObj.getString("openid"));
             user.setNickname(userInfoObj.getString("nickname"));
             user.setSex(userInfoObj.getInt("sex"));
@@ -48,11 +57,45 @@ public class UserInfoServiceImpl implements UserInfoService {
             user.setHeadImgUrl(userInfoObj.getString("headimgurl"));
             user.setUnionid(userInfoObj.get("unionid")==null?"":userInfoObj.getString("unionid"));
             user.setSubscribeTime(userInfoObj.getLong("subscribe_time"));
-            }catch (Exception e) {
+        }catch (Exception e) {
             _logger.error("获取用户信息异常："+e.getMessage());
         }
         return user;
     }
+
+    /**
+     * 根据openid获取用户
+     * @param openid
+     * @return
+     */
+    @Override
+    public User getUserByOpenid(String openid) {
+        Example example = new Example(User.class);
+        Example.Criteria createCriteria = example.createCriteria();
+        createCriteria.andEqualTo("openid", openid);
+        User user= userMapper.selectOneByExample(example);
+        return user;
+    }
+
+
+    /**
+     * 新增关注,取消/重新添加关注
+     * @param user
+     * @return
+     */
+    @Async
+    @Override
+    public Integer addOrUpdateUser(User user) {
+        if(getUserByOpenid(user.getOpenid())==null){
+            return userMapper.insert(user);
+        }else {
+            Example example = new Example(User.class);
+            Example.Criteria createCriteria = example.createCriteria();
+            createCriteria.andEqualTo("openid", user.getOpenid());
+            return userMapper.updateByExampleSelective(user,example);
+        }
+    }
+
 
     /**
      * 获取用户openId
@@ -76,7 +119,6 @@ public class UserInfoServiceImpl implements UserInfoService {
                 resultMap.put("webAccessToken",webAccessToken);
             }
         }
-//        System.out.println("---------获取openid逻辑层 结束---------"+ com.alibaba.fastjson.JSONObject.toJSONString(resultMap));
         return resultMap;
     }
 }

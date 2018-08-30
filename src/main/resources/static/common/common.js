@@ -13,8 +13,15 @@
 
 })($)
 
-
-
+/**
+ * 校验手机号
+ * @param phoneNum
+ * @returns {Object}
+ */
+$.validPhone= function (phoneNum) {
+    var pattern = /^1[34578]\d{9}$/;
+    return pattern.test(phoneNum);
+}
 
 
 /** 拼接字符串 **/

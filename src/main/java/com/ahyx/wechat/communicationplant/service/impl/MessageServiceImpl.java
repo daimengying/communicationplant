@@ -1,7 +1,7 @@
 package com.ahyx.wechat.communicationplant.service.impl;
 
-import cn.hutool.json.JSONUtil;
 import com.ahyx.wechat.communicationplant.contants.WeChatContant;
+import com.ahyx.wechat.communicationplant.domain.User;
 import com.ahyx.wechat.communicationplant.service.MessageService;
 import com.ahyx.wechat.communicationplant.service.UserInfoService;
 import com.ahyx.wechat.communicationplant.service.factory.CreateMessage;
@@ -12,23 +12,16 @@ import com.ahyx.wechat.communicationplant.utils.RestUtils;
 import com.ahyx.wechat.communicationplant.utils.TokenUtil;
 import com.ahyx.wechat.communicationplant.utils.WechatUtil;
 import com.ahyx.wechat.communicationplant.vo.AccessToken;
-import com.ahyx.wechat.communicationplant.vo.UserInfo;
-import com.alibaba.fastjson.JSON;
 import net.sf.json.JSONObject;
-import org.dom4j.io.STAXEventReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
-import sun.misc.resources.Messages_pt_BR;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @Author: daimengying
@@ -36,6 +29,7 @@ import java.util.TreeMap;
  * @Description:自定义消息逻辑
  */
 @Service
+@EnableAsync
 public class MessageServiceImpl implements MessageService {
     private Logger _logger = LoggerFactory.getLogger(this.getClass());
 
@@ -69,22 +63,21 @@ public class MessageServiceImpl implements MessageService {
                 respXml=createEventMsg.sendMsg(requestMap);
                 //关注和取消关注事件存储操作
                 String event=requestMap.get("Event");
-                if(event.equals(WeChatContant.EVENT_SUBSCRIBE)){
-                    //保存用户信息
-                    String fromUserName=requestMap.get("FromUserName");
-                    AccessToken accessToken= TokenUtil.getInstance();
-                    if(accessToken!=null){
-                        UserInfo userInfo=userInfoService.getUserInfoSub(fromUserName,accessToken.getToken());
+                //用户信息数据库操作
+                String fromUserName=requestMap.get("FromUserName");
+                AccessToken accessToken= TokenUtil.getInstance();
+                if(accessToken!=null){
+                    User userInfo=userInfoService.getUserInfoSub(fromUserName,accessToken.getToken());
+                    if(event.equals(WeChatContant.EVENT_SUBSCRIBE)){
                         //保存到数据库
-                        System.out.println("------userInfo-----"+ JSONObject.fromObject(userInfo).toString());
-
+                        _logger.info("用户{}添加关注：{}",userInfo.getNickname(),JSONObject.fromObject(userInfo).toString());
+                        userInfoService.addOrUpdateUser(userInfo);
+                    }else if(event.equals(WeChatContant.EVENT_UNSUBSCRIBE)){
+                        //修改用户关注状态
+                        userInfoService.addOrUpdateUser(userInfo);
                     }
-
-
-                }else if(event.equals(WeChatContant.EVENT_UNSUBSCRIBE)){
-                    //删除用户信息
-
                 }
+
             }
         }catch (Exception e){
             _logger.error("消息发送异常，错误信息：" + e.getMessage());

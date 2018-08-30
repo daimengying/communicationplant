@@ -36,7 +36,7 @@ public class CreateEventMsg implements CreateMessage {
         //关注和取消关注事件
         String event=requestMap.get("Event");
         if(event.equals(WeChatContant.EVENT_SUBSCRIBE)){
-            respContent="欢迎进入测试平台！";
+            respContent="欢迎进入充值测试平台！";
         }
         respXml=MessageUtil.sendTextMsg(requestMap,respContent);
         return  respXml;

@@ -36,6 +36,7 @@ public class TokenUtil {
     }
 
     @Scheduled(fixedDelay = 2*3600*1000)
+//    @Scheduled(cron ="0 0/2 * * * ?" )
     public  void  getAccessToken(){
         Map<String ,String> reqMap =new HashMap();
         reqMap.put("grant_type", WeChatContant.GRANTTYPE);
@@ -43,18 +44,25 @@ public class TokenUtil {
         reqMap.put("secret",weChatAccountConfig.getAppSecret());
         //返回格式{"access_token":"ACCESS_TOKEN","expires_in":7200}
         try {
-            if(accessToken==null){
-                synchronized(AccessToken.class){
-                    if(accessToken==null){
-                        accessToken = new AccessToken();
-                        String restCallResult=restUtils.restGetForEntity(    WeChatContant.ACCESS_TOKEN_URL,reqMap);
-                        if (!StringUtils.isEmpty(restCallResult)) {
-                            JSONObject accessJson=JSONObject.fromObject(restCallResult);
-                            accessToken.setToken(accessJson.getString("access_token"));
-                            accessToken.setExpiresIn(accessJson.getInt("expires_in"));
-                        }
-                    }
-                }
+//            if(accessToken==null){
+//                synchronized(AccessToken.class){
+//                    if(accessToken==null){
+//                        accessToken = new AccessToken();
+//                        String restCallResult=restUtils.restGetForEntity(    WeChatContant.ACCESS_TOKEN_URL,reqMap);
+//                        if (!StringUtils.isEmpty(restCallResult)) {
+//                            JSONObject accessJson=JSONObject.fromObject(restCallResult);
+//                            accessToken.setToken(accessJson.getString("access_token"));
+//                            accessToken.setExpiresIn(accessJson.getInt("expires_in"));
+//                        }
+//                    }
+//                }
+//            }
+            accessToken = new AccessToken();
+            String restCallResult=restUtils.restGetForEntity(    WeChatContant.ACCESS_TOKEN_URL,reqMap);
+            if (!StringUtils.isEmpty(restCallResult)) {
+                JSONObject accessJson=JSONObject.fromObject(restCallResult);
+                accessToken.setToken(accessJson.getString("access_token"));
+                accessToken.setExpiresIn(accessJson.getInt("expires_in"));
             }
 
         }catch (Exception e){

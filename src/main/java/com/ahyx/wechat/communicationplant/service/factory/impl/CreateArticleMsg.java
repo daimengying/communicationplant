@@ -7,6 +7,7 @@ import com.ahyx.wechat.communicationplant.utils.WechatUtil;
 import com.ahyx.wechat.communicationplant.vo.Article;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,6 @@ import java.util.Map;
  * @Date: 2018/7/3 18:25
  * @Description:图文消息传送
  */
-//@Component
 public class CreateArticleMsg implements CreateMessage {
     @Override
     public String sendMsg(Map<String, String> requestMap) {
@@ -72,5 +72,10 @@ public class CreateArticleMsg implements CreateMessage {
             respXml =MessageUtil.sendTextMsg(requestMap,"微信公众号测试1");
         }
         return respXml;
+    }
+
+    @Override
+    public String sendMsg(Map<String, String> requestMap, HttpServletRequest request) {
+        return null;
     }
 }

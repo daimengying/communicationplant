@@ -60,7 +60,8 @@ public class MessageServiceImpl implements MessageService {
                 //事件推送
                 MessageFactory eventMsgFactory=new EventMsgFactory() ;
                 CreateMessage createEventMsg=eventMsgFactory.createMsg();
-                respXml=createEventMsg.sendMsg(requestMap);
+                respXml=createEventMsg.sendMsg(requestMap,request);
+
                 //关注和取消关注事件存储操作
                 String event=requestMap.get("Event");
                 //用户信息数据库操作

@@ -4,6 +4,7 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.ahyx.wechat.communicationplant.config.WeChatAccountConfig;
 import com.ahyx.wechat.communicationplant.contants.WeChatContant;
 import com.ahyx.wechat.communicationplant.domain.ChargeOrder;
+import com.ahyx.wechat.communicationplant.domain.User;
 import com.ahyx.wechat.communicationplant.service.ChargeService;
 import com.ahyx.wechat.communicationplant.service.MessageService;
 import com.ahyx.wechat.communicationplant.utils.*;
@@ -11,6 +12,8 @@ import com.ahyx.wechat.communicationplant.vo.AccessToken;
 import com.ahyx.wechat.communicationplant.vo.TemplateMessage;
 import com.ahyx.wechat.communicationplant.vo.UnifiedRefundRequest;
 import com.lly835.bestpay.model.RefundResponse;
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -49,6 +52,18 @@ public class TestOrderController  {
     private WeChatAccountConfig weChatAccountConfig;
     @Autowired
     MessageService messageService;
+
+    public static void main(String[] args) {
+        JSONObject result=new JSONObject();
+        User user=new User();
+        user.setCity("HS");
+        user.setSex(2);
+        result.put("user",user);
+        result.put("time","1577777777");
+        System.out.println(result.toString());
+        User resultUser= (User) JSONObject.toBean((JSONObject) result.get("user"),User.class);
+        System.out.println(resultUser.getCity());
+    }
 
     @RequestMapping("/invokeCharge")
     @ResponseBody

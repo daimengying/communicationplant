@@ -1,5 +1,6 @@
 package com.ahyx.wechat.communicationplant.service.factory;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -9,4 +10,5 @@ import java.util.Map;
  */
 public interface CreateMessage {
     String sendMsg(Map<String,String> requestMap);
+    String sendMsg(Map<String,String> requestMap, HttpServletRequest request);
 }

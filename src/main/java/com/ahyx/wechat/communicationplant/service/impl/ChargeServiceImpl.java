@@ -133,7 +133,7 @@ public class ChargeServiceImpl implements ChargeService{
     }
 
     /**
-     * 接收微信支付结果通知          ----------此处很多数据要修改-----------
+     * 接收微信支付结果通知
      * @param notifyData
      * @return
      */
@@ -190,9 +190,8 @@ public class ChargeServiceImpl implements ChargeService{
 
         try {
             //4.0 提交订单到兴芃流量平台
-            //------------------------------------代理商账号先写死
             MultiValueMap<String, Object> params= new LinkedMultiValueMap<>();
-            params.add("account", UserAccountContant.USER_ACCOUNT);
+            params.add("account", UserAccountContant.USER_ACCOUNT);//代理商账号
             params.add("packageType", chargeOrder.getPackageType().toString());
             params.add("mobile", chargeOrder.getMobile());
             params.add("amount", chargeOrder.getAmount().toString());
@@ -203,13 +202,13 @@ public class ChargeServiceImpl implements ChargeService{
             resign.append("&mobile=").append(chargeOrder.getMobile());
             resign.append("&amount=").append(chargeOrder.getAmount());
             resign.append("&range=").append(chargeOrder.getRangeType());
-            resign.append("&key=").append(UserAccountContant.USER_APIKEY);//代理商apikey  先写死
+            resign.append("&key=").append(UserAccountContant.USER_APIKEY);//代理商apikey
             String md5sign = DigestUtil.md5Hex(resign.toString());
             params.add("sign",md5sign);
             params.add("callbackUrl",weChatAccountConfig.getCallbackUrl());
             params.add("orderId",chargeOrder.getChargeTaskId());
-//            String restCallResult=restUtil.formPostExchange("http://139.129.220.55/v1/charge.action",params);
-            String restCallResult=restUtil.formPostExchange("http://127.0.0.1:8081/v1/charge.action",params);
+            String restCallResult=restUtil.formPostExchange("http://139.129.220.55/v1/charge.action",params);
+//            String restCallResult=restUtil.formPostExchange("http://127.0.0.1:8081/v1/charge.action",params);
             //修改订单状态，更新订单记录
             JSONObject resultObj=JSONObject.parseObject(restCallResult);
             chargeOrder.setMemo(resultObj.getString("msg"));

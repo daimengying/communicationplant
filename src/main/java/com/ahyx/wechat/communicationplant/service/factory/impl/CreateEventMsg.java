@@ -3,8 +3,12 @@ package com.ahyx.wechat.communicationplant.service.factory.impl;
 import com.ahyx.wechat.communicationplant.contants.WeChatContant;
 import com.ahyx.wechat.communicationplant.service.factory.CreateMessage;
 import com.ahyx.wechat.communicationplant.utils.MessageUtil;
+import com.ahyx.wechat.communicationplant.vo.Article;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,11 +38,34 @@ public class CreateEventMsg implements CreateMessage {
             }
         }
         //关注和取消关注事件
-        String event=requestMap.get("Event");
-        if(event.equals(WeChatContant.EVENT_SUBSCRIBE)){
-            respContent="欢迎进入充值测试平台！";
-        }
+//        String event=requestMap.get("Event");
+//        if(event.equals(WeChatContant.EVENT_SUBSCRIBE)){
+//            respContent="欢迎进入充值测试平台！";
+//        }
         respXml=MessageUtil.sendTextMsg(requestMap,respContent);
         return  respXml;
+    }
+
+    /**
+     * 关注和取消关注事件自动发出图文消息
+     * @param requestMap
+     * @param request
+     * @return
+     */
+    @Override
+    public String sendMsg(Map<String, String> requestMap, HttpServletRequest request) {
+        //关注和取消关注事件
+        String event=requestMap.get("Event");
+        List<Article> articleList = new ArrayList<>();
+        if(event.equals(WeChatContant.EVENT_SUBSCRIBE)){
+            Article item = new Article();
+            item.setTitle("新手福利");
+            item.setDescription("【福利】哎呀，别抢啊，人人都有~ \n淘宝新人首单0元购，支付宝领红包~");
+            item.setPicUrl(request.getScheme()+"://"+ request.getServerName()+"/imgs/active/pic.jpg");
+            item.setUrl(request.getScheme()+"://"+ request.getServerName()+"/active/taoApp");
+            articleList.add(item);
+            return MessageUtil.sendArticleMsg(requestMap,articleList);
+        }
+        return null;
     }
 }

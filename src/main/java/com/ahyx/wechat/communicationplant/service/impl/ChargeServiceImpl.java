@@ -207,7 +207,7 @@ public class ChargeServiceImpl implements ChargeService{
             params.add("sign",md5sign);
             params.add("callbackUrl",weChatAccountConfig.getCallbackUrl());
             params.add("orderId",chargeOrder.getChargeTaskId());
-            String restCallResult=restUtil.formPostExchange("http://139.129.220.55/v1/charge.action",params);
+            String restCallResult=restUtil.formPostExchange("http://139.129.220.55:8081/v1/charge.action",params);
 //            String restCallResult=restUtil.formPostExchange("http://127.0.0.1:8081/v1/charge.action",params);
             //修改订单状态，更新订单记录
             JSONObject resultObj=JSONObject.parseObject(restCallResult);

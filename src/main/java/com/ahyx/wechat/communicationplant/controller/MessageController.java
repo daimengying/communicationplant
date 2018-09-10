@@ -41,6 +41,11 @@ public class MessageController {
     @Autowired
     UserInfoService userInfoService;
 
+    /**
+     *  此处是处理微信服务器的消息转发的
+     * @param request
+     * @return
+     */
     @PostMapping("/wechat")
     public String sendMsg(HttpServletRequest request){
         String result= messageService.processRequest(request);

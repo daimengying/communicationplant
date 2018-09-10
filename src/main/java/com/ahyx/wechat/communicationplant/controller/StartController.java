@@ -24,6 +24,11 @@ public class StartController {
     @Autowired
     UserInfoService userInfoService;
 
+    /**
+     * /wechat处理微信服务器发来的get请求，进行签名的验证
+     * @param request
+     * @return
+     */
     @RequestMapping(value="/", method = RequestMethod.GET)
     @ResponseBody
     public String checkSignature(HttpServletRequest request){

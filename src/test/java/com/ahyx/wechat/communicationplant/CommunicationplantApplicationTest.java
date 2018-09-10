@@ -1,13 +1,18 @@
 package com.ahyx.wechat.communicationplant;
 
+import cn.hutool.crypto.digest.DigestUtil;
+import com.ahyx.wechat.communicationplant.config.UserAccountConfig;
+import com.ahyx.wechat.communicationplant.config.WeChatAccountConfig;
 import com.ahyx.wechat.communicationplant.contants.WeChatContant;
 import com.ahyx.wechat.communicationplant.controller.ChargeController;
+import com.ahyx.wechat.communicationplant.dao.ChargeOrderMapper;
 import com.ahyx.wechat.communicationplant.domain.ChargeOrder;
 import com.ahyx.wechat.communicationplant.service.MessageService;
 import com.ahyx.wechat.communicationplant.utils.RestUtils;
 import com.ahyx.wechat.communicationplant.utils.TokenUtil;
 import com.ahyx.wechat.communicationplant.vo.AccessToken;
 import com.ahyx.wechat.communicationplant.vo.TemplateMessage;
+import com.lly835.bestpay.service.impl.BestPayServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,26 +68,12 @@ public class CommunicationplantApplicationTest {
 //    }
 
     @Autowired
-    MessageService messageService;
+    private UserAccountConfig userAccountConfig;
 
     @Test
     public void test() {
-        TreeMap<String,TreeMap<String,String>> dataParams = new TreeMap<>();
-        TemplateMessage templateMsg = new TemplateMessage();
+        System.out.println(userAccountConfig.getAccount()+"====="+userAccountConfig.getApikey());
 
-        ChargeOrder chargeOrder=new ChargeOrder();
-        chargeOrder.setMobile("15605655465");
-        chargeOrder.setPayMoney(5.22);
-        dataParams.put("first", TemplateMessage.item("您的订单已被处理，正在充值中。", "#000000"));
-        dataParams.put("keyword1",TemplateMessage.item(chargeOrder.getMobile(), "#000000"));
-        dataParams.put("keyword2",TemplateMessage.item("微信支付", "#000000"));
-        dataParams.put("keyword4",TemplateMessage.item(chargeOrder.getPayMoney()+"元", "#000000"));
-        dataParams.put("remark",TemplateMessage.item("充值存在延迟，请耐心等待！", "#000000"));
-
-        templateMsg.setTemplate_id(WeChatContant.COMMITORDER_SUCCESS_TEMPLATE_ID);//订单受理通知
-        templateMsg.setTouser(chargeOrder.getBuyerOpenid());
-        templateMsg.setData(dataParams);
-        messageService.sendTemplate("13_yFGDrzZ0N1RUUeXKzhoMy0m9FnZgbvS4UfHQFw-5R8yCpnLzc1PZQ8NrZXvgliQkX_RmXvb6V9yyKoGQKqdMDhqIqvO7U9Oc83LDrATMglQIraYtQ64GQl0BeknihE1mRxHHYw2SZ8WMbOpiDGPhAAALOX", net.sf.json.JSONObject.fromObject(templateMsg));
     }
 
 }

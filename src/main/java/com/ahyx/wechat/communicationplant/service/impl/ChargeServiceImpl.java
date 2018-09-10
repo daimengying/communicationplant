@@ -1,8 +1,8 @@
 package com.ahyx.wechat.communicationplant.service.impl;
 
 import cn.hutool.crypto.digest.DigestUtil;
+import com.ahyx.wechat.communicationplant.config.UserAccountConfig;
 import com.ahyx.wechat.communicationplant.config.WeChatAccountConfig;
-import com.ahyx.wechat.communicationplant.contants.UserAccountContant;
 import com.ahyx.wechat.communicationplant.dao.ChargeOrderMapper;
 import com.ahyx.wechat.communicationplant.domain.ChargeOrder;
 import com.ahyx.wechat.communicationplant.service.ChargeService;
@@ -49,6 +49,8 @@ public class ChargeServiceImpl implements ChargeService{
 
     @Autowired
     private WeChatAccountConfig weChatAccountConfig;
+    @Autowired
+    private UserAccountConfig userAccountConfig;
 
     /**
      * 微信支付发起
@@ -191,18 +193,18 @@ public class ChargeServiceImpl implements ChargeService{
         try {
             //4.0 提交订单到兴芃流量平台
             MultiValueMap<String, Object> params= new LinkedMultiValueMap<>();
-            params.add("account", UserAccountContant.USER_ACCOUNT);//代理商账号
+            params.add("account", userAccountConfig.getAccount());//代理商账号
             params.add("packageType", chargeOrder.getPackageType().toString());
             params.add("mobile", chargeOrder.getMobile());
             params.add("amount", chargeOrder.getAmount().toString());
             params.add("range",chargeOrder.getRangeType().toString());
             //加密算法
             StringBuffer resign = new StringBuffer();
-            resign.append("account=").append(UserAccountContant.USER_ACCOUNT);
+            resign.append("account=").append(userAccountConfig.getAccount());
             resign.append("&mobile=").append(chargeOrder.getMobile());
             resign.append("&amount=").append(chargeOrder.getAmount());
             resign.append("&range=").append(chargeOrder.getRangeType());
-            resign.append("&key=").append(UserAccountContant.USER_APIKEY);//代理商apikey
+            resign.append("&key=").append(userAccountConfig.getApikey());//代理商apikey
             String md5sign = DigestUtil.md5Hex(resign.toString());
             params.add("sign",md5sign);
             params.add("callbackUrl",weChatAccountConfig.getCallbackUrl());

@@ -1,0 +1,119 @@
+*, :after, :before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+ul li{list-style: none;}
+
+.nav{width:100%;}
+.bt{color:#fffa2c;text-align: center;font-size:18px;margin-top: 1rem;}
+
+
+.tel{width:90%;height:6rem;margin:0 auto;margin-top: 1.5rem;}
+.mui-span input{width:75%;height:2rem;margin-left: 1rem;border:1px solid #F5A200;padding:4px;}
+.mui-span .mui-b{display:block;width:4rem;height:2rem;float:left;line-height:2rem;text-align: right;font-size:16px;font-weight: normal;color:#fff;}
+.mui-span{display:block;height:2rem;margin-top:1rem;}
+.mui-span .yzm{width:50%;height:2rem;}
+.mui-span .yz{float:right;width:20%;height:2rem;}
+#aa{text-align:center;width:4rem;line-height:2rem;background: #F5A200;padding: 0 0.5rem;color:#fff;}
+
+.mui-jiang{width:94%;height:2rem;margin:0 auto;}
+.mui-jiang p{float:right;line-height:2rem;}
+.mui-jiang p a{color:#fff;}
+
+main{padding-top: 0rem;}
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.draw {
+    width:360px;
+    margin: 0 auto;
+    padding:51px;
+    background-image: url(/imgs/active/raffle/bg.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.draw .item {
+    width: 100px;
+    height: 100px;
+    background-image: url(/imgs/active/raffle/bg1.png);
+    background-repeat: no-repeat;
+    background-size: 96% 100%;
+}
+
+.draw .item.active {
+    background-image: url(/imgs/active/raffle/bg2.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.draw .img {
+    display: table-cell;
+    width: 150px;
+    height: 61px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.draw .img img {
+    vertical-align: top;
+}
+
+.draw .gap {
+    width: 5px;
+}
+
+.draw .gap-2 {
+    height: 5px;
+}
+
+.draw .name {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    padding-right: 6px;
+}
+
+.draw .draw-btn {
+    display: block;
+    height: 100px;
+    line-height: 100px;
+    border-radius: 20px;
+    font-size: 25px;
+    font-weight: 700;
+    text-decoration: none;
+    background-image: url(/imgs/active/raffle/bg3.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin-right:4%;
+}
+
+.margin{
+    margin-top:1px!important;
+}
+
+.margin1{
+    margin-top:1px!important;
+}
+
+
+.mui-gg{width:70%;height:2rem;margin-top:2rem;overflow:hidden;position:relative;margin-left:15%;}
+.mui-gg .ul2{width:100%;position: absolute;left: 0;top: 0;}
+.mui-gg .ul2 li{margin-bottom: 15px;}
+.mui-gg .ul2 li a{display:block;color:#fffa2c;text-align: center;}
+.mui-gg .ul2 li a:hover{text-decoration: none;}
+
+
+
+
+.mui-div{width:94%;height:15rem;margin-left: 3%;margin-top:2rem;}
+.mui-h4{color:#fffa2c;}
+.act{color:#fff;}

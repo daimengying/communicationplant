@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>中奖记录</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<div th:include="/common :: head" th:remove="tag"></div>
+		<div th:include="/common :: commonjs" th:remove="tag"></div>
+		<link th:href="@{/css/active/record.css}" rel="stylesheet" />
+		<script type="text/javascript">
+			mui.init()
+		</script>
+	</head>
+
+	<body >
+		<div class="mui-div">
+			<h4 class="mui-h4">我的中奖纪录</h4>
+			<div class="div1">
+				<ul class="mui-ul"><li>奖品名称</li><li  style="margin-left:3.7rem;">中奖时间</li></ul>
+				<div th:if="${recordListByMobile!=null}">
+					<div th:each="record : ${recordListByMobile}">
+						<ul class="mui-ul" th:if="${record.prizeLevel<8}">
+							<li th:text="${record.prizeName}"></li>
+							<li class="mui-li" th:text="${#dates.format(record.optionTime, 'yyyy-MM-dd')}"></li></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+
+</html>

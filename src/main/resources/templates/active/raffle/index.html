@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>抽奖</title>
+    <div th:include="/common :: head" th:remove="tag"></div>
+	<link th:href="@{/css/active/raffle.css}" rel="stylesheet">
+    <div th:include="/common :: commonjs" th:remove="tag"></div>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+    </script>
+</head>
+<body ng-app="mainApp" ng-controller="indexCtrl" style="background: #f02d2f;">
+		 
+		<div class="nav">
+			<img th:src="@{/imgs/active/raffle/banner.jpg}" alt="" style="width:100%;"/>
+		</div>
+		
+		<div class="headerWrapper container-fluid bt" >
+			卡罗婚纱摄影喜迎中秋·国庆，优惠大放送  
+		</div>
+
+	<div class="tel">
+			<span class="mui-span">
+				<b class="mui-b">手机号</b><input type="tel" name="tel"  placeholder="请输入手机号" id="phone"/>
+			</span>
+			<span class="mui-span">
+				<b class="mui-b">验证码</b><div th:include="/common :: kaptcha" th:remove="tag"></div>
+			</span>
+	</div>
+
+
+	<div class="mui-jiang">
+        <p><a href="javascript:void(0)" onclick="record()">查看中奖信息</a></p>
+
+	</div>
+
+		<main style="background: #f02d2f;">
+			<div class="draw" id="lottery">
+				<table >
+                    <!--动态读取-->
+				</table>
+			</div>
+
+		</main>
+
+	</body>
+
+<!--中奖最新5条滚动-->
+	<div class="mui-gg">
+		<ul class="ul2" th:if="${newRecords!=null}">
+			<li  th:each="record : ${newRecords}">
+				<a href="#" th:if="${record.prizeLevel<8}">恭喜
+					<!--<span th:text="|Welcome to our application, ${user.name}!|">-->
+					<span th:text="${#strings.substring(record.mobile,0,3)}+'****'+${#strings.substring(record.mobile,7,11)}"></span>
+					获得
+					<span th:text="${record.prizeName}"></span>
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="mui-div">
+		<h4 class="mui-h4">活动详情：</h4>
+		<p class="act">一.每个号码每天限抽奖一次。</p>
+		<p class="act">二.以上流量均将在提交信息后1-3个工作日内完成充值，公司将用短信的方式通知到账成功。</p>
+		<p class="act">三.流量仅限当月有效，次月不结转。</p> 
+		<p class="act">四.所抽到体验卡可联系门店领取。<br />地址：合肥市寿春路与宿州路交叉口 百花金鹰国际大厦 B座10楼<br />联系方式：0551-63355545</p>
+	</div>
+
+<div th:include="/common :: commonjs" th:remove="tag"></div>
+<script th:src="@{/js/active/raffle/index.js}"+tt=Math.random() type="text/javascript"></script>
+
+</html>

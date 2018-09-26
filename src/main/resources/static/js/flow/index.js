@@ -59,5 +59,11 @@ $(function(){
             $(this).find("img:last-child").attr("src","/common/imgs/right.png");
         }
     })
+
+    //手机号输入框失去焦点事件
+    $("#phoneNum").blur(function () {
+        var phone=$("#phoneNum").val();
+        1
+    });
 })
 

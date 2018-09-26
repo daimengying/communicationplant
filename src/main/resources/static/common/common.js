@@ -23,6 +23,26 @@ $.validPhone= function (phoneNum) {
     return pattern.test(phoneNum);
 }
 
+/**
+ * 谷歌图形验证码
+ * @param vrifyCode
+ */
+$.imgvrifyKaptcha=function (vrifyCode) {
+    var returnData;
+    $.ajax({
+        url: commonJs.root() + '/imgvrifyKaptcha?tt='+new Date().getTime(),
+        type: "POST",
+        cache: false,
+        data:{"vrifyCode":vrifyCode},
+        dataType:'json',
+        async:false,  //此处必须同步，不然没有返回值
+        success: function(data){
+            returnData= data;
+        }
+    });
+    return returnData;
+}
+
 
 /** 拼接字符串 **/
 function StringBuffer(str){

@@ -6,7 +6,8 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>充值</title>
-    <div th:include="/common :: head" th:remove="tag"></div>
+    <!--<div th:include="/common :: head" th:remove="tag"></div>-->
+    <link rel="stylesheet"  th:href="@{/common/css/public.css}" />
     <link th:href="@{/common/css/swiper.min.css}" rel="stylesheet">
     <link th:href="@{/css/flow/index.css}" rel="stylesheet">
 
@@ -102,7 +103,7 @@
         </h4>
         <ul>
             <li>生效时间：充值成功即时生效</li>
-            <li>使用范围：支持全国漫游</li>
+            <li>使用范围：仅支持安徽移动全国流量使用</li>
             <li>使用有效期：充值当月有效</li>
             <li>充值次数限制：不限制次数</li>
             <li>停机、欠费 不能充值</li>

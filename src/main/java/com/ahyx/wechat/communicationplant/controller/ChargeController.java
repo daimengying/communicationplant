@@ -4,10 +4,8 @@ import com.ahyx.wechat.communicationplant.config.WeChatAccountConfig;
 import com.ahyx.wechat.communicationplant.contants.WeChatContant;
 import com.ahyx.wechat.communicationplant.domain.ChargeOrder;
 import com.ahyx.wechat.communicationplant.domain.Commodity;
-import com.ahyx.wechat.communicationplant.service.ChargeService;
-import com.ahyx.wechat.communicationplant.service.MessageService;
-import com.ahyx.wechat.communicationplant.service.UserInfoService;
-import com.ahyx.wechat.communicationplant.service.impl.CommodityServiceImpl;
+import com.ahyx.wechat.communicationplant.domain.MobileArea;
+import com.ahyx.wechat.communicationplant.service.*;
 import com.ahyx.wechat.communicationplant.utils.HttpsClient;
 import com.ahyx.wechat.communicationplant.utils.TokenUtil;
 import com.ahyx.wechat.communicationplant.utils.XmlUtils;
@@ -55,7 +53,9 @@ public class ChargeController {
     @Autowired
     WeChatAccountConfig weChatAccountConfig;
     @Autowired
-    CommodityServiceImpl commodityService;
+    CommodityService commodityService;
+    @Autowired
+    MobileAreaService mobileAreaService;
 
     /**
      * 流量充值首页
@@ -72,6 +72,36 @@ public class ChargeController {
         model.addAttribute("commodities",commodities);
         return "/flow/index";
     }
+
+    /**
+     * 根据手机号获取区域信息
+     * @param phone
+     * @return
+     */
+    @PostMapping(value="/getAreaAndPackage", produces = " application/json;charset=UTF-8")
+    @ResponseBody
+    public String getAreaAndPackage(@RequestParam String phone){
+        Map<String,Object>result=new HashMap<>();
+        MobileArea area= mobileAreaService.getAreaByMobile(phone);
+        int operatorType=0;//运营商类型  1 移动 2联通 3电信
+        if(area.getServiceProvider().contains("移动")){
+            operatorType=1;
+        }else  if(area.getServiceProvider().contains("联通")){
+            operatorType=2;
+        }else  if(area.getServiceProvider().contains("电信")){
+            operatorType=3;
+        }
+        Example example = new Example(Commodity.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("status",0);
+        criteria.andEqualTo("type",1);
+        criteria.andEqualTo("operatorType",operatorType);
+        List<Commodity>commodities=commodityService.getCommodityList(example);
+        result.put("mobileArea",area);
+        result.put("commodities",commodities);
+        return JSON.toJSONString(result);
+    }
+
 
     /**
      * 唤起微信支付弹窗

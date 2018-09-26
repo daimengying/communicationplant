@@ -8,6 +8,7 @@ window.onload = function() {
 
 var lottery = {
 	index: -1, //当前转动到哪个位置，起点位置
+    current: 0,//增亮位置
 	count: 0, //总共有多少个位置
 	timer: 0, //setTimeout的ID，用clearTimeout清除
 	speed: 20, //初始转动速度
@@ -27,13 +28,28 @@ var lottery = {
 		var index = this.index;
 		var count = this.count;
 		var lottery = this.obj;
-		$(lottery).find('.lottery-unit.lottery-unit-' + index).removeClass('active');
-		index += 1;
-		if(index > count - 1) {
-			index = 0;
+		$(lottery).find('.lottery-unit' ).removeClass('active');
+
+        //要顺时针滚动
+        var current=index+1;
+        if(index=="3"){
+            current="7";
+        }else if(index=="4"){
+            current="6";
+        }else if(index=="5"){
+            current="5";
+        }else if(index=="6"){
+            current="3";
+        }else if(index=="2"){
+            current="4";
+        }
+        index += 1;
+		if(index >= count - 1) {
+			index = -1;
 		};
-		$(lottery).find('.lottery-unit.lottery-unit-' + index).addClass('active');
+		$(lottery).find('.lottery-unit.lottery-unit-' + current).addClass('active');
 		this.index = index;
+		this.current=current;
 		return false;
 	},
 	stop: function(index) {
@@ -51,7 +67,6 @@ function getPrizeList() {
         type: "POST",
         cache: false,
         data:{"type":1},
-        // contentType : 'application/json;charset=utf-8',
         dataType:'json',
         success: function(data){
             var tbody="";
@@ -60,6 +75,7 @@ function getPrizeList() {
             		if(i==0||i==3||i==5){
                         tbody+="<tr>";
 					}
+
                     tbody+="<td class='item lottery-unit lottery-unit-"+i+"'>" +
                         "<div class='img'>" +
                         "<img src='/imgs/active/raffle/img"+(i+1)+".png'  alt=''>" +
@@ -157,7 +173,7 @@ function roll() {
 	lottery.times += 1;
 	lottery.roll(); //转动过程调用的是lottery的roll方法，这里是第一次调用初始化
 
-	if(lottery.times > lottery.cycle + 10 && lottery.prize == lottery.index) {
+	if(lottery.times > lottery.cycle + 10 && lottery.prize == lottery.current) {
 		clearTimeout(lottery.timer);
 		layer.msg(alertContent, {
 		    time: 3000 //3s后自动关闭
@@ -171,7 +187,7 @@ function roll() {
 		} else if(lottery.times == lottery.cycle) {
             lottery.prize = prizeLevel-1
 		} else {
-			if(lottery.times > lottery.cycle + 10 && ((lottery.prize == 0 && lottery.index == 7) || lottery.prize == lottery.index + 1)) {
+			if(lottery.times > lottery.cycle + 10 && ((lottery.prize == 0 && lottery.current == 7) || lottery.prize == lottery.current + 1)) {
 				lottery.speed += 110;
 			} else {
 				lottery.speed += 20;
